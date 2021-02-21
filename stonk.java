@@ -2,6 +2,7 @@ import companyPackage.Date;
 import companyPackage.DataPoint;
 import companyPackage.Company;
 import companyPackage.CompanyData;
+import companyPackage.Rankings;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -11,7 +12,7 @@ public class stonk {
         parseData();
     }
     private static void parseData() throws FileNotFoundException {
-        File file = new File("C:\\Users\\Kyle\\Documents\\Brackets-Files\\data.csv");
+        File file = new File("C:\\Users\\Kyle\\Documents\\Brackets-Files\\Stock-Project\\data.csv");
         Scanner scanner = new Scanner(file);
         scanner.useDelimiter(",");
         String line;
@@ -38,7 +39,9 @@ public class stonk {
             splitLine = line.split(",");
             
             
-            if (splitLine.length > 1) {
+            if (splitLine.length > 2) {
+//                System.out.print(splitLine.length);
+//                System.out.println(splitLine[0]);
                 dateCounter = 0;
                 startOfNum = false;
                 startOfString = false;
@@ -50,7 +53,7 @@ public class stonk {
                 tempDataArray = new ArrayList<DataPoint>();
                 for (String col : splitLine) {
                     
-                    if (col.equals("Ticker")) {
+                    if (col.equals("Ticker") || col.equals("Total")) {
                         break;
                     }
                     
@@ -152,12 +155,43 @@ public class stonk {
                 for (DataPoint newPoint : tempDataArray) {
                     newCompanyData.addDataPoint(newPoint);
                 }
-                companies.add(new Company(essentialData[0], essentialData[1], essentialData[2], essentialData[3], essentialData[4], newCompanyData));
+                if (essentialData[3].equals("United States") && !(essentialData[4].equals("Utilities") || essentialData[4].equals("Financials"))) {
+                    companies.add(new Company(essentialData[0], essentialData[1], essentialData[2], essentialData[3], essentialData[4], newCompanyData));
+                }
             }
         }
-        for (int i = 0; i < 2000; i++) {
-            System.out.println(companies.get(i));
+        int i = 0;
+        while (i < companies.size()) {
+            if (companies.get(i).getName().equals("")) {
+                companies.remove(i);
+            } else {
+                i++;
+            }
         }
+//        for (Company company : companies) {
+//            if (company.getName().equals("")) {
+//                companies.remove(company);
+//            }
+//        }
+//        System.out.println(companies.get(0));
+        
+//        for (i = 0; i < dates.size()-12; i++) {
+//            System.out.println(dates.get(i));
+//        }
+        
+        for (i = 0; i < companies.size(); i++) {
+            if (companies.get(i).getName().equals("Philip Morris International Inc.")) {
+//                System.out.println(companies.get(i).getCompanyData().getData(dates.get(0)).getYield());
+            }
+        }
+//        System.out.println(new Date(31, 12, 2020));
+        Rankings rankings = new Rankings(new Date(31, 12, 2020), companies);
+        ArrayList<Company> ranked = rankings.getRankings();
+        for (i = 0; i < 30; i++) {
+            System.out.println(ranked.get(i));
+        }
+        
+        
         scanner.close();
     }
 }

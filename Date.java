@@ -54,12 +54,12 @@ public class Date {
     public int getYear() {
         return year;
     }
-    public String getDate() {
+    public String getFullDate() {
         return String.valueOf(month) + "/" + String.valueOf(day) + "/" + String.valueOf(year);
     }
     
     //toString method
     public String toString() {
-        return getDate();
+        return getFullDate();
     }
 }
